@@ -55,6 +55,21 @@ spec:
 ```
 ★ ui-컨테이너
 
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ui
+  name: ui-svc
+spec:
+  type: NodePort
+  selector:
+    app: ui
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30080
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -62,7 +77,7 @@ metadata:
   labels:
     app: ui
 spec:
-  replicas: 1 -> 레플리카는 임의적이로 1개로 설정
+  replicas: 1
   selector:
     matchLabels:
       app: ui
@@ -73,14 +88,21 @@ spec:
     spec:
       containers:
       - name: ui
-        image: skarltjr/msa-ui:2.0 -> UI 컨테이너를 위해 만들어둔 이미지 활용
+        image: skarltjr/msa-ui:2.1
         env:
-        - name: INFO_IP  ->  매번 변하는 영화정보 컨테이너 정보를 환경변수를 활용하여 대응 -> 이슈 및 해결에서 좀 더 상세하게 설명
+        - name: INFO_IP
           value: "172.30.4.73"
         - name: INFO_PORT
-          value: "32240"
+          value: "30490"
+        - name: UI_PORT
+          value: "30080"
+        - name: UI_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
         ports:
         - containerPort: 3000
+~                                        
 ```
 ### 이슈 및 해결
 - 쿠버네티스에서 deployment를 생성할 때 pod가 a노드에 생성될수도, b노드에 생성될수도 있다.
