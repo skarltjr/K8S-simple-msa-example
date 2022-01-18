@@ -167,6 +167,11 @@ ui컨테이너가 위치한 노드의 ip를 env 환경변수에 넘겨주도록 
 
 
 
-
+### 참고
+- 내 쿠버네티스 기록
+- NodePort : https://kubernetes.io/ko/docs/concepts/services-networking/service/  
+- 현재 파드의 hostIp를 환경변수로 전달하기
+  - https://kubernetes.io/ko/docs/tasks/inject-data-application/environment-variable-expose-pod-information/
+  - https://kubernetes.io/ko/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/
 
 
