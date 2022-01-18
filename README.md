@@ -51,7 +51,7 @@ spec:
         ports:
         - containerPort: 8080
 ```
-
+- 이 후 kubectl expose deployment <info디플로이먼트 명> --type=NodePort --port=8080 --target-port=8080
 ```
 ★ ui-컨테이너
 
@@ -93,7 +93,7 @@ spec:
         - name: INFO_IP
           value: "172.30.4.73"  -> info컨테이너가 올라간 노드 ip
         - name: INFO_PORT
-          value: "30490"    -> info 컨테이너 서비스의 접근 port
+          value: "30490"    -> info 컨테이너 서비스의 접근 port / 위에서 expose로 생성한 info service의 접근 port
         - name: UI_PORT
           value: "30080"  -> 바로 위 nodePort서비스에서 지정한 접근port
         - name: UI_IP
