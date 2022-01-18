@@ -91,15 +91,15 @@ spec:
         image: skarltjr/msa-ui:2.1
         env:
         - name: INFO_IP
-          value: "172.30.4.73"
+          value: "172.30.4.73"  -> info컨테이너가 올라간 노드 ip
         - name: INFO_PORT
-          value: "30490"
+          value: "30490"    -> info 컨테이너 서비스의 접근 port
         - name: UI_PORT
-          value: "30080"
+          value: "30080"  -> 바로 위 nodePort서비스에서 지정한 접근port
         - name: UI_IP
           valueFrom:
             fieldRef:
-              fieldPath: status.hostIP
+              fieldPath: status.hostIP  -> 현재 ui파드의 hostIP(노드ip)
         ports:
         - containerPort: 3000
 ~                                        
