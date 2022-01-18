@@ -147,7 +147,7 @@ app.get('/info/:movieNum', function(req, res){
 ```
 공식문서를 다 뒤져보고 생각해보며 해결했다
 https://github.com/skarltjr/MSA-ui-container/blob/main/movies/.env에서 볼 수 있듯이
-ui컨테이너의 ip를 환경변수로 받는다
+ui컨테이너의 ip를 환경변수로 받도록 설정
 이 후 UI컨테이너 yaml에서 맨 마지막 status.hostIP로 현재 
 ui컨테이너가 위치한 노드의 ip를 env 환경변수에 넘겨주도록 했고 해결할 수 있었다
 
