@@ -7,13 +7,24 @@
 ![image](https://user-images.githubusercontent.com/62214428/149953735-ad629f3c-d7a6-4f1a-97c9-f1540383ec5f.png)
 - 간단한 영화정보 사이트를 msa형태로 구축한다
 - 쿠버네티스 클러스터는 사전에 미리 1개의 마스터와 3개의 워커 노드로 구성
+- 진행 순서
+  - 사전에 영화 정보를 저장해둔다
+    - 영화 정보 컨테이너도 nodePort로 외부에서 접속하도록 설정하였기에 가능
+  - 클라이언트가 UI컨테이너에 접근
+  - 원하는 영화 카드 선택
+  - 해당 영화에 대한 초간단 정보 반환받는다
+    - 이 때 UI컨테이너는 영화 정보 컨테이너에 접근
+    - 해당 영화에 대한 정보를 영화 정보 컨테이너로부터 전달받아오고
+    - 이를 클라이언트에게 "UI"컨테이너가 전달
 
 
 ### 과정
 #### 1. 영화정보, UI컨테이너를 위한 코드 구현
-  - ETC에 표기된 소스코드 참고
+  - 영화 정보 소스 코드 (springboot): https://github.com/skarltjr/MSA-info-container
+  - UI 소스 코드 (node js) : https://github.com/skarltjr/MSA-ui-container
 #### 2. 쿠버네티스 deployment에서 사용할 도커 이미지로 생성
-  - ETC에 표기된 도커허브 이미지 참고
+  - 영화 정보 컨테이너 이미지(도커허브) : skarltjr/msa-info:1.0  / https://hub.docker.com/r/skarltjr/msa-info
+  - UI컨테이너 이미지(도커허브) : skarltjr/msa-ui:2.0 / https://hub.docker.com/repository/docker/skarltjr/msa-ui
 #### 3. 쿠버네티스에서 배포를 위한 deployment yaml 작성
 ```
 info 컨테이너 
@@ -76,9 +87,7 @@ spec:
 ### 문제점
 
 ### ETC
-- 영화 정보 
-  - 소스 코드 / springboot: 
-  - 이미지 : 
+
 - UI  
   - 소스 코드/ node js:
   - 이미지 : 
