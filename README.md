@@ -23,8 +23,8 @@
   - 영화 정보 소스 코드 (springboot): https://github.com/skarltjr/MSA-info-container
   - UI 소스 코드 (node js) : https://github.com/skarltjr/MSA-ui-container
 #### 2. 쿠버네티스 deployment에서 사용할 도커 이미지로 생성
-  - 영화 정보 컨테이너 이미지(도커허브) : skarltjr/msa-info:1.0  / https://hub.docker.com/r/skarltjr/msa-info
-  - UI컨테이너 이미지(도커허브) : skarltjr/msa-ui:2.0 / https://hub.docker.com/repository/docker/skarltjr/msa-ui
+  - 영화 정보 컨테이너 이미지(도커허브) : skarltjr/msa-info:최신  / https://hub.docker.com/r/skarltjr/msa-info
+  - UI컨테이너 이미지(도커허브) : skarltjr/msa-ui:최신 / https://hub.docker.com/repository/docker/skarltjr/msa-ui
 #### 3. 쿠버네티스에서 배포를 위한 deployment yaml 작성
 ```
 info 컨테이너 
