@@ -83,14 +83,48 @@ spec:
         - containerPort: 3000
 ```
 ### 이슈 및 해결
-
+- 쿠버네티스에서 deployment를 생성할 때 pod가 a노드에 생성될수도, b노드에 생성될수도 있다.
+- 그럼 `UI컨테이너`는 당연히 정보를 얻기 위해 접근해야할 영화 정보 컨테이너가 어디에 생성될지 모른다
+- 이를해결하고자 `환경변수`를 사용했다
+- `UI컨테이너`는 `.env`파일을 통해 접근할 영화 정보 컨테이너의 ip,port를 `INFO_IP , INFO_PORT' 환경변수로 다룬다
+- 따라서 위에서 볼 수 있듯이 UI컨테이너를 배포하기위한 yaml에서 env부분에서 이를 명시해줌으로써 위 이슈를 해결
+- 다만 아직 부족하다고 느낀것은 위 상황은 결국 INFO컨테이너가 먼저 동작해야만한다는 제한사항
 ### 문제점
+```
+<a href="http://172.30.4.73:30490/info/1"><div class="row">
+  <div class="column nature">
+    <div class="content">
+      <img src="assets/1.jpg" alt="Mountains" style="width:100%">
+      <h4>Evil Dead 2013</h4>
+      
+    </div>
+    </a>
+  </div>
+```
+- 해당 이미지를 클릭하면 링크대로 아래를 수행
+```
+app.get('/info/:movieNum', function(req, res){
+    var targetUrl = infoBaseUrl+req.params.movieNum
+    var data = {
+        movieNumber : 0,
+        title : "",
+        content : ""
+    }
+    // 기본이 비동기라 외부 api호출 종료를 보장 후 다음으로 넘어가야한다
+    console.log('current target uri = '+targetUrl)
+    var response = request('GET',targetUrl)
 
-### ETC
+    var result = JSON.parse(response.getBody())
+    data.movieNumber = result.movieNumber
+    data.title = result.title
+    data.content = result.content
 
-- UI  
-  - 소스 코드/ node js:
-  - 이미지 : 
+    res.send(result)
+});
+```
+- 문제는 html에서 환경변수 사용법을 몰라서 직접 영화 정보 컨테이너의 ip, port를 명시해준것
+- 여전히 해결 못했음.
+
 
 
 
