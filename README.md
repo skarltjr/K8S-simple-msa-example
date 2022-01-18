@@ -111,20 +111,19 @@ spec:
 - `UI컨테이너`는 `.env`파일을 통해 접근할 영화 정보 컨테이너의 ip,port를 `INFO_IP , INFO_PORT' 환경변수로 다룬다
 - 따라서 위에서 볼 수 있듯이 UI컨테이너를 배포하기위한 yaml에서 env부분에서 이를 명시해줌으로써 위 이슈를 해결
 - 다만 아직 부족하다고 느낀것은 위 상황은 결국 INFO컨테이너가 먼저 동작해야만한다는 제한사항
-### 문제점
+
+
+### 이슈 및 해결2
+상황
 ```
-<a href="http://172.30.4.73:30490/info/1"><div class="row">
-  <div class="column nature">
-    <div class="content">
-      <img src="assets/1.jpg" alt="Mountains" style="width:100%">
-      <h4>Evil Dead 2013</h4>
-      
-    </div>
-    </a>
-  </div>
-```
-- 해당 이미지를 클릭하면 링크대로 아래를 수행
-```
+사용자가 UI컨테이너에 접근한 후 이미지를 클릭하면 해당 영화정보를 영화 정보 컨테이너로부터 전달받아오고
+이를 UI컨테이너에서 렌더링하여 유저에게 전달
+문제는 <a href="http://172.30.4.73:30490/info/3"><div class="row">
+-> 이미지 클릭시 아래 UI컨테이너의 로직에 어떻게 접근하느냐?였다
+즉 ui파드가 생성된 노드ip는 가변적이며 그 때마다 현재 ui파드의 hostIP정보를 아래 여기!!에 적용해야했다
+<a href="http://<여기!!> :30490/info/3"><div class="row">
+
+- 아래는 접근하고자하는 UI컨테이너의 api
 app.get('/info/:movieNum', function(req, res){
     var targetUrl = infoBaseUrl+req.params.movieNum
     var data = {
@@ -141,13 +140,29 @@ app.get('/info/:movieNum', function(req, res){
     data.title = result.title
     data.content = result.content
 
-    res.send(result)
+    res.render('info', {title:data.title,content:data.content});
 });
 ```
-- 문제는 html에서 환경변수 사용법을 몰라서 직접 영화 정보 컨테이너의 ip, port를 명시해준것
-- 여전히 해결 못했음.
+- 해결
+```
+공식문서를 다 뒤져보고 생각해보며 해결했다
+https://github.com/skarltjr/MSA-ui-container/blob/main/movies/.env에서 볼 수 있듯이
+ui컨테이너의 ip를 환경변수로 받는다
+이 후 UI컨테이너 yaml에서 맨 마지막 status.hostIP로 현재 
+ui컨테이너가 위치한 노드의 ip를 env 환경변수에 넘겨주도록 했고 해결할 수 있었다
 
-
+        env:
+        - name: INFO_IP
+          value: "172.30.4.73"  -> info컨테이너가 올라간 노드 ip
+        - name: INFO_PORT
+          value: "30490"    -> info 컨테이너 서비스의 접근 port
+        - name: UI_PORT
+          value: "30080"  -> 바로 위 nodePort서비스에서 지정한 접근port
+        - name: UI_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP  -> 현재 ui파드의 hostIP(노드ip)
+```
 
 
 
