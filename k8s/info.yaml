@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: info
+  labels:
+    app: info
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: info
+  template:
+    metadata:
+      labels:
+        app: info
+    spec:
+      containers:
+      - name: info
+        image: skarltjr/msa-info:1.0
+        ports:
+        - containerPort: 8080
+        
+# 이 후 kubectl expose deployment <info디플로이먼트 명> --type=NodePort --port=8080 --target-port=8080로 service
