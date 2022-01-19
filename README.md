@@ -180,4 +180,4 @@ ui컨테이너가 위치한 노드의 ip를 env 환경변수에 넘겨주도록 
   - https://kubernetes.io/ko/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/
 
 ### 유튜브 링크
-- https://youtu.be/16o_7Qf6I9w
+- https://youtu.be/exLbja2rqTg
