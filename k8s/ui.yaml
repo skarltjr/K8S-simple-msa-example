@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ui
+  name: ui-svc
+spec:
+  type: NodePort
+  selector:
+    app: ui
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+  labels:
+    app: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+      - name: ui
+        image: skarltjr/msa-ui:2.1
+        env:
+        - name: INFO_IP
+          value: "172.30.4.73"  -> info컨테이너가 올라간 노드 ip
+        - name: INFO_PORT
+          value: "30490"    -> info 컨테이너 서비스의 접근 port / 위에서 expose로 생성한 info service의 접근 port
+        - name: UI_PORT
+          value: "30080"  -> 바로 위 nodePort서비스에서 지정한 접근port
+        - name: UI_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP  -> 현재 ui파드의 hostIP(노드ip)
+        ports:
+        - containerPort: 3000
+~                               
